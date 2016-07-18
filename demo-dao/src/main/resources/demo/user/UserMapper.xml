@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.framework.demo.dao.user.UserMapper">
+    <select id="findUserByMap" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from `tb_user`
+        <where>
+            <if test="userName != null and userName != ''">
+                AND `name` = #{userName}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                AND `password` = #{userPassword}
+            </if>
+        </where>
+    </select>
+    <select id="findPageUser" resultType="com.framework.demo.dto.user.UserDto">
+        SELECT
+            a.`Id`, a.`name`, a.`password`, a.`email`, a.`phone`, a.`role_id` roleId,
+            a.`sex`, a.`status` status, a.`create_time` createTime, b.name roleName
+        FROM
+            tb_user a
+            join tb_role b
+            on a.role_id = b.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND a.`name` like CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>
